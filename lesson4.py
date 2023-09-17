@@ -31,6 +31,7 @@ while True:
     upper   = np.array([h, s, v])
     mask    = cv2.inRange(hsv_frame, lower, upper)
     res     = cv2.bitwise_and(frame, frame, mask=mask)
+    res     = cv2.rotate(res, cv2.ROTATE_180)
 
     cv2.imshow('frame', frame)
     cv2.imshow('mask', mask)

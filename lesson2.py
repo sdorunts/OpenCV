@@ -7,6 +7,7 @@ img = cv2.line(img, (10, 10), (600, 600), (100, 150, 50), 5)
 img = cv2.rectangle(img, (10, 10), (600, 600), (255, 0, 0), 5)
 img = cv2.circle(img, (500, 450), 100, (150, 50, 100), -1)
 img = cv2.circle(img, (500, 450), 100, (100, 50, 150), 10)
+img = cv2.putText(img, "Shagen Dorunts", (100, 100), 0, 2, (255, 255, 255), 5, cv2.LINE_AA)
 
 cv2.namedWindow('image')
 cv2.imshow('image', img)

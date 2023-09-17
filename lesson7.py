@@ -20,7 +20,6 @@ cv2.createTrackbar('V', 'trackbars', 0, 255, nothing)
 
 while True:
     ret, frame = cap.read()
-
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     hl  = cv2.getTrackbarPos('HL', 'trackbars')
@@ -33,23 +32,15 @@ while True:
     lower   = np.array([hl, sl, vl])
     upper   = np.array([h, s, v])
 
-    blur  = cv2.blur(frame, (21, 21))
-    gblur = cv2.GaussianBlur(frame, (21, 21), 0)
-    bblur = cv2.bilateralFilter(frame, 21, 75, 75)
+    filtered_hsv_frame = cv2.bilateralFilter(hsv_frame, 9, 75, 75)
+    mask = cv2.inRange(filtered_hsv_frame, lower, upper)
 
-    hsv_frame = cv2.bilateralFilter(hsv_frame, 9, 75, 75)
-    mask    = cv2.inRange(hsv_frame, lower, upper)
-    # res     = cv2.bitwise_and(frame, frame, mask=mask)
+    opening     = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    open_close  = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
 
-    erosion = cv2.erode(mask, kernel=kernel, iterations=1)
-    dilation = cv2.dilate(mask, kernel=kernel, iterations=1)
-    opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-    closing = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
-    open_close = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-
-    edge = cv2.Canny(open_close, 100, 200)
+    edge        = cv2.Canny(open_close, 100, 200)
     contours, h = cv2.findContours(edge, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-    contours = sorted(contours, key=cv2.contourArea, reverse=True)
+    contours    = sorted(contours, key=cv2.contourArea, reverse=True)
 
     try:
         cv2.drawContours(frame, [contours[0]], -1, (0, 0, 255), 4)
@@ -57,16 +48,8 @@ while True:
         pass
 
     cv2.imshow('frame', frame)
-    # cv2.imshow('blur', blur)
-    # cv2.imshow('gblur', gblur)
-    # cv2.imshow('bblur', bblur)
     cv2.imshow('mask', mask)
-    cv2.imshow('erosion', erosion)
-    cv2.imshow('dilation', dilation)
-    cv2.imshow('opening', opening)
-    cv2.imshow('closing', closing)
     cv2.imshow('open_close', open_close)
-    # cv2.imshow('res', res)
 
     if (cv2.waitKey(1) & 0xFF == 27):
         break

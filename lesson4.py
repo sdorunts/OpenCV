@@ -27,8 +27,12 @@ while True:
     s   = cv2.getTrackbarPos('S', 'trackbars')
     v   = cv2.getTrackbarPos('V', 'trackbars')
 
+    lower   = np.array([hl, sl, vl])
+    upper   = np.array([h, s, v])
+    mask    = cv2.inRange(hsv_frame, lower, upper)
+
     cv2.imshow('frame', frame)
-    cv2.imshow('hsv_frame', hsv_frame)
+    cv2.imshow('mask', mask)
 
     if (cv2.waitKey(1) & 0xFF == ord('q')):
         break

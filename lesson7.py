@@ -6,6 +6,8 @@ def nothing(x):
 
 cap = cv2.VideoCapture(0)
 
+kernel = np.ones((5, 5), np.uint8)
+
 cv2.namedWindow('frame')
 cv2.namedWindow('trackbars', cv2.WINDOW_NORMAL)
 
@@ -30,19 +32,24 @@ while True:
 
     lower   = np.array([hl, sl, vl])
     upper   = np.array([h, s, v])
-    mask    = cv2.inRange(hsv_frame, lower, upper)
-    res     = cv2.bitwise_and(frame, frame, mask=mask)
 
-    blur = cv2.blur(frame, (21, 21))
+    blur  = cv2.blur(frame, (21, 21))
     gblur = cv2.GaussianBlur(frame, (21, 21), 0)
     bblur = cv2.bilateralFilter(frame, 21, 75, 75)
+
+    mask    = cv2.inRange(hsv_frame, lower, upper)
+    res     = cv2.bitwise_and(frame, frame, mask=mask)
+    erosion = cv2.erode(mask, kernel=kernel, iterations=1)
+    dilation = cv2.dilate(mask, kernel=kernel, iterations=1)
 
     cv2.imshow('frame', frame)
     # cv2.imshow('blur', blur)
     # cv2.imshow('gblur', gblur)
     # cv2.imshow('bblur', bblur)
     cv2.imshow('mask', mask)
-    cv2.imshow('res', res)
+    cv2.imshow('erosion', erosion)
+    cv2.imshow('dilation', dilation)
+    # cv2.imshow('res', res)
 
     if (cv2.waitKey(1) & 0xFF == 27):
         break

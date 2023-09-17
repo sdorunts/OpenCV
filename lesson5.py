@@ -10,10 +10,12 @@ while True:
 
     framex = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=5)
     framey = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=5)
+    edge   = cv2.Canny(gray, 100, 200)
 
     cv2.imshow('frame', frame)
     cv2.imshow('framex', framex)
     cv2.imshow('framey', framey)
+    cv2.imshow('edge', edge)
 
     if (cv2.waitKey(1) & 0xFF == 27):
         break

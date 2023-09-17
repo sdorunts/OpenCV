@@ -30,9 +30,11 @@ while True:
     lower   = np.array([hl, sl, vl])
     upper   = np.array([h, s, v])
     mask    = cv2.inRange(hsv_frame, lower, upper)
+    res     = cv2.bitwise_and(frame, frame, mask=mask)
 
     cv2.imshow('frame', frame)
     cv2.imshow('mask', mask)
+    cv2.imshow('res', res)
 
     if (cv2.waitKey(1) & 0xFF == ord('q')):
         break

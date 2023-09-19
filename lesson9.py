@@ -45,9 +45,11 @@ while True:
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
 
-        if (area > 300):
+        if (area > 600):
             x, y, w, h = cv2.boundingRect(contours[i])
             frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            frame = cv2.rectangle(frame, (x, y), (x + 60, y - 25), (0, 0, 0), -1)
+            cv2.putText(frame, 'object', (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
 
     cv2.imshow('frame', frame)
     cv2.imshow('mask', mask)
